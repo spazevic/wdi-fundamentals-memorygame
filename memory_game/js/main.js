@@ -1,3 +1,5 @@
+let resetButton;
+//Array of playing cards used in game
 const cards = [
 {
 	rank: "queen",
@@ -21,24 +23,44 @@ const cards = [
 }
 ];
 const cardsInPlay= [];
-function checkForMatch() {
+//checks for match, accessed from flipCard function
+function checkForMatch() { 
 		if (cardsInPlay[0] === cardsInPlay[1]) {
-			console.log("You found a match");
+			alert("You found a match");
 		}
 
-		else if (cardsInPlay.length > 1 ) {
-			console.log("Sorry, try again");
-		}
 		else {
-			return;
+			alert("Sorry, try again");
 		}
 }
-function flipCard(cardId) {
+//retrieves data from cards array, shows user their card, will checkForMatch if used twice
+function flipCard() {
+	let cardId = this.getAttribute('data-id');
 	console.log("User flipped " + cards[cardId].rank);
 	cardsInPlay.push(cards[cardId].rank);
 	console.log(cards[cardId].cardImage);
 	console.log(cards[cardId].suit);
-	checkForMatch();
+	this.setAttribute('src', cards[cardId].cardImage)
+	if (cardsInPlay.length === 2) {
+		checkForMatch();
+	}	
 }	
-	flipCard(0);
-	flipCard(2);
+//sets up game borad, images and card data
+function createBoard() {
+	for (i = 0; i < cards.length; i++) {
+		let cardElement = document.createElement('img');
+		cardElement.setAttribute('src', 'images/back.png');
+		cardElement.setAttribute('data-id', i);
+		cardElement.addEventListener('click', flipCard);
+		document.getElementById('game-board').appendChild(cardElement);
+	}
+}
+
+function shuffle() {
+	for (i = 0; i < cards.length; i++) {
+		let j = Math.floor(Math.random() * (i + 1));
+		[cards[i], cards[j]] = [cards[j], cards[i]];
+	}
+}
+createBoard();
+shuffle();
